@@ -1,0 +1,43 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Moja aplikacja Django{% endblock %}</title>
+        {% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    </head>
+    <body>
+        <!-- Pasek nawigacyjny -->
+        <header class="header">
+            <nav>
+                <ul class="navbar">
+                <a href="/home/" class="hover:underline">Strona główna</a>
+                <a href="/grades/" class="hover:underline">Oceny</a>
+                <a href="/lecturers/" class="hover:underline">Wykładowcy</a>
+                <a href="/subjects/" class="hover:underline">Przedmioty</a>
+                <a href="/schedule/" class="hover:underline">Terminarz</a>
+                <a href="/logout/" class="hover:underline">Wyloguj się</a>
+                </ul>
+            </nav>
+        </header>
+<body>
+    <main class="container">
+        {% block content %}{% endblock %}
+    
+    <h1>{{ lecturer.first_name }} {{ lecturer.last_name }}</h1>
+    <p>Email: {{ lecturer.email }}</p>
+    <p>Wydział: {{ lecturer.department }}</p>
+
+    <h2>Przedmioty</h2>
+    <ul>
+       
+            <li>{{ subject.name }}</li>
+       
+    </ul>
+</main>
+</body>
+</html>

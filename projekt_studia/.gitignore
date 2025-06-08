@@ -1,0 +1,30 @@
+ECHO is on.
+# Wirtualne środowisko
+venv/
+env/
+
+# Pliki cache Pythona
+__pycache__/
+*.pyc
+*.pyo
+
+# Baza danych lokalna
+#db.sqlite3
+
+# Konfiguracja środowiska
+.env
+
+# Logi
+*.log
+
+# Pliki systemowe IDE
+.idea/
+.vscode/
+*.swp
+
+# Statyczne pliki wygenerowane (opcjonalnie)
+staticfiles/
+
+# Migracje (jeśli chcesz tylko struktury, bez danych migracji)
+*/migrations/*.pyc
+*/migrations/__pycache__/

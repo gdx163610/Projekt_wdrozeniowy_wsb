@@ -1,0 +1,48 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Moja aplikacja Django{% endblock %}</title>
+        {% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    </head>
+    <body>
+        <!-- Pasek nawigacyjny -->
+        <header class="header">
+            <nav>
+                <ul class="navbar">
+              <a href="/home/" class="hover:underline">Strona główna</a>
+                <a href="/grades/" class="hover:underline">Oceny</a>
+                <a href="/lecturers/" class="hover:underline">Wykładowcy</a>
+                <a href="/subjects/" class="hover:underline">Przedmioty</a>
+                <a href="/schedule/" class="hover:underline">Terminarz</a>
+                <a href="/logout/" class="hover:underline">Wyloguj się</a>
+                </ul>
+            </nav>
+        </header>
+
+<body>
+    <main class="container">
+        {% block content %}{% endblock %}
+    <h1>{{ student.first_name }} {{ student.last_name }}</h1>
+    <p>Email: {{ student.email }}</p>
+    <p>Grupa: {{ student.group.name }}</p>
+    <p>Data zapisu: {{ student.enrollment_date }}</p>
+
+    <h2>Oceny</h2>
+    <ul>
+        <li>{{ grade.subject.name }}: {{ grade.grade }}</li>
+    </ul>
+
+    <div class="mt-6">
+        <a href="/home/" class="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+            ← Wróć do strony głównej
+        </a>
+    </div>
+    </main>
+</body>
+</html>

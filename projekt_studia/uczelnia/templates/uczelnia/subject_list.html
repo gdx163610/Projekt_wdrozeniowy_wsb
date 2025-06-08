@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Przedmioty</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    {% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+</head>
+<body class="min-h-screen flex flex-col">
+    <header class="bg-blue-600 text-white py-4 shadow">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <h1 class="text-lg font-semibold">Panel uczelni</h1>
+            <nav class="space-x-6 text-sm">
+             <a href="/home/" class="hover:underline">Strona główna</a>
+                <a href="/grades/" class="hover:underline">Oceny</a>
+                <a href="/lecturers/" class="hover:underline">Wykładowcy</a>
+                <a href="/subjects/" class="hover:underline">Przedmioty</a>
+                <a href="/schedule/" class="hover:underline">Terminarz</a>
+                <a href="/logout/" class="hover:underline">Wyloguj się</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-10">
+        <div class="bg-white p-6 rounded-xl shadow-md">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Lista przedmiotów</h2>
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white border border-gray-200 rounded shadow">
+                    <thead class="bg-gray-100">
+                        <tr class="text-left">
+                            <th class="px-4 py-3">Nazwa</th>
+                            <th class="px-4 py-3">Kod</th>
+                            <th class="px-4 py-3">Prowadzący</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for subject in subjects %}
+                        <tr class="border-t">
+                            <td class="px-4 py-2">{{ subject.name }}</td>
+                            <td class="px-4 py-2">{{ subject.code }}</td>
+                            <td class="px-4 py-2">
+                                {{ subject.lecturer.first_name }} {{ subject.lecturer.last_name }}
+                            </td>
+                           
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="px-4 py-4 text-center text-gray-500">Brak dostępnych przedmiotów.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer class="text-center text-gray-500 py-4">
+        &copy; 2025 System Zarządzania Uczelnią
+    </footer>
+</body>
+</html>

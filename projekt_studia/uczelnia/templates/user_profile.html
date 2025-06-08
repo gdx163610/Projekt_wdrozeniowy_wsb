@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Profil użytkownika</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background-color: #f2f2f2;
+        }
+        .profile-card {
+            max-width: 500px;
+            margin: auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        .profile-card h2 {
+            text-align: center;
+            color: #333;
+        }
+        .profile-info {
+            margin-top: 20px;
+        }
+        .profile-info p {
+            font-size: 16px;
+            margin: 10px 0;
+            color: #555;
+        }
+        .label {
+            font-weight: bold;
+            color: #222;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-card">
+        <h2>Profil użytkownika</h2>
+        <div class="profile-info">
+            <p><span class="label">Nazwa użytkownika:</span> {{ user.username }}</p>
+            <p><span class="label">Imię:</span> {{ user.first_name }}</p>
+            <p><span class="label">Nazwisko:</span> {{ user.last_name }}</p>
+            <p><span class="label">Email:</span> {{ user.email }}</p>
+            {% if user.user_type %}
+                <p><span class="label">Typ użytkownika:</span> 
+                    {% if user.user_type == '1' %} Administrator
+                    {% elif user.user_type == '2' %} Pracownik
+                    {% elif user.user_type == '3' %} Student
+                    {% else %} Nieznany
+                    {% endif %}
+                </p>
+            {% endif %}
+        </div>
+        <div style="text-align:center; margin-top: 30px;">
+            <a href="/home/" class="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                ← Wróć do strony głównej
+            </a>
+        </div>
+    </div>
+</body>
+</html>

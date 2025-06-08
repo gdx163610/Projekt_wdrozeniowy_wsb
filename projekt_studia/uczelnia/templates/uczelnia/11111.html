@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminarz zajęć</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="min-h-screen flex flex-col bg-gray-50">
+    <main class="flex-1 container mx-auto px-4 py-10">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <h1 class="text-lg font-semibold">Panel uczelni</h1>
+            <nav class="space-x-6 text-sm">
+                <a href="/home/" class="hover:underline">Strona główna</a>
+                <a href="/grades/" class="hover:underline font-bold">Oceny</a>
+                <a href="/lecturers/" class="hover:underline">Wykładowcy</a>
+                <a href="/subjects/" class="hover:underline">Przedmioty</a>
+                <a href="/schedule/" class="hover:underline">Terminarz</a>
+                <a href="/logout/" class="hover:underline">Wyloguj się</a>
+            </nav>
+        </div>
+        <div class="bg-white p-8 rounded-xl shadow-md max-w-4xl mx-auto">
+            <h1 class="text-2xl font-bold text-blue-700 text-center mb-8">Terminarz zajęć</h1>
+
+            <!-- Formularz wyboru dnia -->
+            <form method="get" class="flex flex-wrap gap-4 items-center justify-center mb-8">
+                <label for="date" class="font-semibold">Wybierz dzień:</label>
+                <input type="date" id="date" name="date" value="{{ selected_date|date:'Y-m-d' }}" class="px-4 py-2 rounded border shadow">
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Filtruj</button>
+                <a href="{% url 'student_schedule' %}" class="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition">Pokaż wszystko</a>
+            </form>
+
+            <!-- Tabela zajęć -->
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white border rounded shadow">
+                    <thead class="bg-blue-100">
+                        <tr>
+                            <th class="py-2 px-4 border-b">Data</th>
+                            <th class="py-2 px-4 border-b">Godzina</th>
+                            <th class="py-2 px-4 border-b">Przedmiot</th>
+                            <th class="py-2 px-4 border-b">Wykładowca</th>
+                            <th class="py-2 px-4 border-b">Lokalizacja</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entry in schedule %}
+                            <tr class="text-center {% cycle 'bg-white' 'bg-gray-50' %}">
+                                <td class="py-2 px-4 border-b">{{ entry.date|date:"d.m.Y" }}</td>
+                                <td class="py-2 px-4 border-b">{{ entry.start_time }} - {{ entry.end_time }}</td>
+                                <td class="py-2 px-4 border-b">{{ entry.subject.name }}</td>
+                                <td class="py-2 px-4 border-b">{{ entry.lecturer.first_name }} {{ entry.lecturer.last_name }}</td>
+                                <td class="py-2 px-4 border-b">{{ entry.location }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center text-gray-500 py-4">Brak zajęć w terminarzu.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    <footer class="text-center text-gray-500 py-4">
+        &copy; 2025 System Zarządzania Uczelnią
+    </footer>
+</body>
+</html>

@@ -1,0 +1,146 @@
+
+# Dokumentacja projektu: System Zarządzania Uczelnią
+
+## **1. Opis projektu**
+System zarządzania uczelnią to aplikacja internetowa, która pozwala na organizację planu zajęć, zarządzanie grupami studentów, salami, oraz harmonogramem wykładowców. System został zaprojektowany jako aplikacja oparta wyłącznie na Pythonie z wykorzystaniem frameworka Django do obsługi backendu i frontendowych szablonów.
+
+---
+
+## **2. Struktura projektu**
+
+### **2.1. Główne podstrony**
+1. **Strona główna**:
+   - Prezentuje podstawowe informacje o uczelni.
+   - Nawigacja do głównych funkcjonalności systemu.
+
+2. **Plan lekcji**:
+   - Wyświetlanie harmonogramu zajęć.
+   - Szczegóły zajęć (data, godzina, sala, prowadzący).
+
+3. **Oceny**:
+   - Widok ocen dla studentów i wykładowców.
+
+
+4. **Kalendarz**:
+   - Wizualizacja planu zajęć w formie kalendarza.
+
+5. **Terminy egzaminów**:
+   - Lista terminów egzaminów przypisanych do grup studentów.
+
+---
+
+## **3. Architektura projektu**
+
+### **3.1. Technologie**
+- **Język programowania:** Python
+- **Framework backendowy:** Django
+- **Baza danych:** SQLLite
+- **Frontend:** Django Templates (HTML, CSS, JS)
+- **Przechowywanie plików:** Brak dedykowanego systemu (możliwość rozbudowy o Amazon S3 lub Google Cloud Storage).
+- **API:** REST API dla komunikacji wewnętrznej (opcjonalnie do rozbudowy).
+
+---
+
+
+---
+
+## **4. Funkcjonalności**
+
+### **4.1. Zarządzanie planem zajęć**
+- **Tworzenie zajęć:**
+  - Formularz do wprowadzenia nazwy zajęć, daty, czasu trwania, sali i grupy.
+- **Wyświetlanie harmonogramu:**
+  - Lista zajęć w formie tabeli z możliwością przejścia do szczegółów.
+
+### **4.2. Widok ocen**
+- **Dla studentów:**
+  - Wyświetlanie ocen przypisanych do konkretnej osoby.
+
+
+### **4.3. Forum dyskusyjne**
+- System postów i komentarzy.
+- Podział na tematy (np. przedmioty).
+
+### **4.4. Kalendarz zajęć**
+- Wizualizacja planu w formie kalendarza.
+
+
+### **4.5. Bezpieczeństwo**
+- Autoryzacja na podstawie ról (administrator, student).
+- Logowanie i rejestracja z kontrolą danych.
+
+---
+
+## **5. Konfiguracja projektu**
+
+### **5.1. Baza danych**
+1. Upewnij się, że PostgreSQL jest zainstalowany.
+2. Utwórz nową bazę danych:
+   ```sql
+   CREATE DATABASE university_schedule;
+   CREATE USER your_user WITH PASSWORD 'your_password';
+   GRANT ALL PRIVILEGES ON DATABASE university_schedule TO your_user;
+   ```
+
+### **5.2. Migracje Django**
+1. Wykonaj migracje:
+   ```bash
+   python manage.py makemigrations
+   python manage.py migrate
+   ```
+
+### **5.3. Tworzenie konta administratora**
+1. Utwórz konto administratora:
+   ```bash
+   python manage.py createsuperuser
+   ```
+
+---
+
+## **6. Testowanie**
+
+### **6.1. Testy manualne**
+1. Uruchom lokalny serwer:
+   ```bash
+   python manage.py runserver
+   ```
+2. Sprawdź dostęp do podstron:
+   - Strona główna: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+   - Plan lekcji: [http://127.0.0.1:8000/plan-lekcji/](http://127.0.0.1:8000/plan-lekcji/)
+
+### **6.2. Testy jednostkowe**
+Dodaj testy w `schedule/tests.py`:
+```python
+from django.test import TestCase
+from .models import Sala
+
+class SalaModelTest(TestCase):
+    def test_create_sala(self):
+        sala = Sala.objects.create(nazwa="Sala 101", lokalizacja="Budynek A")
+        self.assertEqual(str(sala), "Sala 101")
+```
+Uruchom testy:
+```bash
+python manage.py test
+```
+
+---
+
+## **7. Rozbudowa projektu**
+
+### **7.1. Integracja z zewnętrznymi API**
+1. **Google Maps API**:
+   - Obliczanie czasu przejazdu między kampusami.
+2. **Google Calendar**:
+   - Eksport harmonogramu zajęć do kalendarza.
+
+### **7.2. Przechowywanie plików**
+- Integracja z Amazon S3 lub Google Cloud Storage do przechowywania materiałów edukacyjnych.
+
+### **7.3. Powiadomienia**
+- Powiadomienia e-mail/SMS o zmianach w planie zajęć (użycie Celery + Twilio).
+
+---
+
+---
+

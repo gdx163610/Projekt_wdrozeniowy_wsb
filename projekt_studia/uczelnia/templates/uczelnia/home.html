@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strona Główna</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="min-h-screen flex flex-col">
+
+ 
+
+    <header class="bg-blue-600 text-white py-4 shadow">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <h1 class="text-lg font-semibold">Panel uczelni</h1>
+            <nav class="space-x-6 text-sm">
+                <a href="/home/" class="hover:underline font-bold">Strona główna</a>
+                <a href="/grades/" class="hover:underline">Oceny</a>
+                <a href="/lecturers/" class="hover:underline">Wykładowcy</a>
+                <a href="/subjects/" class="hover:underline">Przedmioty</a>
+                <a href="/schedule/" class="hover:underline">Terminarz</a>
+                <a href="/logout/" class="hover:underline">Wyloguj się</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-1 container mx-auto px-4 py-10">
+        <div class="bg-white p-8 rounded-xl shadow-md max-w-3xl mx-auto">
+            <!-- Powitanie i użytkownik -->
+            <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4">
+                <div>
+                    <h2 class="text-3xl font-bold text-blue-700 mb-1">Witamy w systemie uczelni!</h2>
+                    <p class="text-gray-700">Zalogowany jako: <span class="font-semibold">{{ user.first_name }} {{ user.last_name }} ({{ user.username }})</span></p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <span class="inline-block bg-red-600 text-white text-xs rounded-full px-2 py-0.5 absolute -top-2 -right-2">
+                            {{ news_count|default:"0" }}
+                        </span>
+                        <button id="bell-btn" type="button" class="text-gray-600 text-lg focus:outline-none">🔔</button>
+                        <!-- Okienko powiadomień -->
+                        <div id="news-popup" class="hidden absolute right-0 mt-2 w-80 bg-white border rounded shadow-lg z-50">
+                            <div class="p-4 border-b font-bold text-blue-700">Aktualności</div>
+                            <ul id="news-list" class="max-h-80 overflow-y-auto"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <!-- Najbliższe zajęcia -->
+            <div class="mb-10">
+                <h3 class="text-xl font-semibold text-blue-700 mb-3">Najbliższe zajęcia</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white border rounded shadow text-sm">
+                        <thead class="bg-blue-100">
+                            <tr>
+                                <th class="py-2 px-4 border-b">Data</th>
+                                <th class="py-2 px-4 border-b">Godzina</th>
+                                <th class="py-2 px-4 border-b">Przedmiot</th>
+                                <th class="py-2 px-4 border-b">Sala</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for lesson in upcoming_lessons %}
+                            <tr class="text-center {% cycle 'bg-white' 'bg-gray-50' %}">
+                                <td class="py-2 px-4 border-b">{{ lesson.date|date:"d.m.Y" }}</td>
+                                <td class="py-2 px-4 border-b">{{ lesson.start_time }} - {{ lesson.end_time }}</td>
+                                <td class="py-2 px-4 border-b">{{ lesson.subject.name }}</td>
+                                <td class="py-2 px-4 border-b">{{ lesson.location }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center text-gray-500 py-4">Brak nadchodzących zajęć.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Ostatnie oceny -->
+            <div class="mb-10">
+                <h3 class="text-xl font-semibold text-blue-700 mb-3">Ostatnie oceny</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white border rounded shadow text-sm">
+                        <thead class="bg-blue-100">
+                            <tr>
+                                <th class="py-2 px-4 border-b">Przedmiot</th>
+                                <th class="py-2 px-4 border-b">Ocena</th>
+                                <th class="py-2 px-4 border-b">Data</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for grade in recent_grades %}
+                            <tr class="text-center {% cycle 'bg-white' 'bg-gray-50' %}">
+                                <td class="py-2 px-4 border-b">{{ grade.subject.name }}</td>
+                                <td class="py-2 px-4 border-b">{{ grade.grade }}</td>
+                                <td class="py-2 px-4 border-b">{{ grade.date|date:"d.m.Y" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center text-gray-500 py-4">Brak ocen do wyświetlenia.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="mt-8 flex justify-center">
+                <a href="/user_profile/"
+                   class="flex flex-col items-center bg-white border border-blue-200 shadow-lg rounded-xl px-8 py-5 transition hover:bg-blue-50 hover:shadow-xl group w-full max-w-xs">
+                    <div class="bg-blue-600 rounded-full p-3 mb-3 shadow group-hover:bg-blue-700 transition">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A9 9 0 1112 21a9 9 0 01-6.879-3.196z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </div>
+                    <span class="text-lg font-semibold text-blue-700 mb-1 group-hover:text-blue-900 transition">Twoje dane</span>
+                    <span class="text-gray-500 text-sm">Zobacz i edytuj swój profil użytkownika</span>
+                </a>
+            </div>
+
+            <blockquote class="italic text-gray-500 mt-8 text-center">
+                „Uczenie się to nie tylko zdobywanie wiedzy, ale także rozwijanie siebie.”
+            </blockquote>
+        </div>
+    </main>
+
+    <footer class="text-center text-gray-500 py-4">
+        &copy; 2025 System Zarządzania Uczelnią
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const bellBtn = document.getElementById('bell-btn');
+            const popup = document.getElementById('news-popup');
+            const newsList = document.getElementById('news-list');
+            const newsCountSpan = document.querySelector('.bg-red-600');
+
+            bellBtn.addEventListener('click', function(e) {
+                popup.classList.toggle('hidden');
+                if (!popup.classList.contains('loaded')) {
+                    fetch("{% url 'news_json' %}")
+                        .then(resp => resp.json())
+                        .then(data => {
+                            newsList.innerHTML = '';
+                            let unread = 0;
+                            if (data.news.length === 0) {
+                                newsList.innerHTML = '<li class="p-4 text-gray-500 text-center">Brak aktualności.</li>';
+                            } else {
+                                data.news.forEach(n => {
+                                    if (!n.read) unread++;
+                                    newsList.innerHTML += `
+                                        <li class="p-4 border-b ${n.read ? 'opacity-50' : ''}">
+                                            <div class="font-semibold text-blue-700">${n.title}</div>
+                                            <div class="text-xs text-gray-500 mb-1">${n.created_at}</div>
+                                            <div class="text-gray-700">${n.content}</div>
+                                            ${!n.read ? `<button class="mt-2 px-2 py-1 bg-green-500 text-white text-xs rounded mark-read-btn" data-id="${n.id}">Oznacz jako przeczytane</button>` : '<span class="text-xs text-gray-400">Przeczytane</span>'}
+                                        </li>
+                                    `;
+                                });
+                            }
+                            newsCountSpan.textContent = unread;
+                            popup.classList.add('loaded');
+
+                            // Obsługa kliknięcia "Oznacz jako przeczytane"
+                            document.querySelectorAll('.mark-read-btn').forEach(btn => {
+                                btn.addEventListener('click', function(ev) {
+                                    const newsId = this.getAttribute('data-id');
+                                    fetch("{% url 'mark_news_read' %}", {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/x-www-form-urlencoded',
+                                            'X-CSRFToken': '{{ csrf_token }}'
+                                        },
+                                        body: 'news_id=' + newsId
+                                    }).then(resp => resp.json()).then(res => {
+                                        if (res.status === 'ok') {
+                                            this.parentElement.classList.add('opacity-50');
+                                            this.outerHTML = '<span class="text-xs text-gray-400">Przeczytane</span>';
+                                            let count = parseInt(newsCountSpan.textContent, 10);
+                                            newsCountSpan.textContent = Math.max(0, count - 1);
+                                        }
+                                    });
+                                    ev.stopPropagation();
+                                });
+                            });
+                        });
+                }
+                e.stopPropagation();
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!popup.contains(e.target) && !bellBtn.contains(e.target)) {
+                    popup.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
